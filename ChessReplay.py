@@ -17,9 +17,12 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import pygame as py
 import ChessEngine
-from agents.expert import MrExpert
-from agents.novice import MrNovice
 from agents.random import MrRandom
+try:
+    from agents.expert import MrExpert
+    from agents.novice import MrNovice
+except ModuleNotFoundError:
+    print('Skipping import of MrExpert and MrNovice ...')
 from agents.replay import MrReplay
 from student_agents.template import Agent as Agent1
 from student_agents.template2 import Agent as Agent2
