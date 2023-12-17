@@ -58,12 +58,12 @@ class Agent:
             color = "b"	
 
         
-        for i in len(pieces):    #modify the pieces to match the color of the player
-                my_pieces[i] = color + pieces[i]
+        for i in range( 0,len(pieces) ):    #modify the pieces to match the color of the player
+                my_pieces.append( color + pieces[i])
               
-        if(gs.checkMate()):
+        if(gs.checkMate):
             return  -float("inf")
-        elif(gs.staleMate()):
+        elif(gs.staleMate):
             return 0
         else: 
             score = 0
