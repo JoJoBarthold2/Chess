@@ -67,13 +67,13 @@ class Agent:
             return 0
         else: 
             score = 0
-            for i in range(64):
+            for i in range(36):
                 piece = gs.board[i]
                 if(piece != "--"):
                     if(piece in my_pieces):
-                        score += values_of_pieces[pieces.index(piece)]
+                        score += values_of_pieces[pieces.index(piece[1])]
                     else:
-                        score -= values_of_pieces[pieces.index(piece)]
+                        score -= values_of_pieces[pieces.index(piece[1])]
             return score
 
          
