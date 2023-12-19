@@ -35,13 +35,14 @@ class Agent:
         
 
         """
+        depth = 5
         valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
         random.shuffle(valid_moves)
         for valid_move in valid_moves:
-            valid_move[1] = self.minimax(gs, 5, float("-inf"), float("inf"), gs.whiteToMove)
+            valid_move[1] = self.minimax(gs, depth, float("-inf"), float("inf"), gs.whiteToMove)
         
         valid_moves.sort(key=lambda x: x[1], reverse=gs.whiteToMove)
-        self.update_move(valid_moves[0][0], valid_moves[0][1], 3)
+        self.update_move(valid_moves[0][0], valid_moves[0][1], depth)
          
     
 
@@ -67,7 +68,7 @@ class Agent:
 
               
         if(gs.checkMate):
-            return  -float("inf") if gs.whiteToMove else float("inf")
+            return  float("-inf") if gs.whiteToMove else float("inf")
         elif(gs.staleMate):
             return 0
         else: 
