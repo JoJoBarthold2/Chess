@@ -58,16 +58,13 @@ class Agent:
         """
 
         pieces = ["N", "B", "R", "Q", "K", "p"]
-        values_of_pieces = [4, 3, 5, 30, 0, 1] #King is 0 because it is not a piece that can be captured
-        my_pieces = []
-        if (gs.whiteToMove): #set the color of the player
-            color = "w"
-        else:
-            color = "b"	
+        values_of_pieces = [4, 3, 5, 10, 0, 1] #King is 0 because it is not a piece that can be captured
+        
+       
+        	
 
         
-        for i in range( 0,len(pieces) ):    #modify the pieces to match the color of the player
-                my_pieces.append( color + pieces[i])
+
               
         if(gs.checkMate):
             return  -float("inf") if gs.whiteToMove else float("inf")
@@ -78,7 +75,7 @@ class Agent:
             for i in range(36):
                 piece = gs.board[i]
                 if(piece != "--"):
-                    if(piece in my_pieces):
+                    if(piece[0]=="w"):
                         score += values_of_pieces[pieces.index(piece[1])]
                     else:
                         score -= values_of_pieces[pieces.index(piece[1])]
