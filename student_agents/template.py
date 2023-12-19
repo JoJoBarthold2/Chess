@@ -35,7 +35,15 @@ class Agent:
         
 
         """
-        # TODO
+        valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
+        random.shuffle(valid_moves)
+        for valid_move in valid_moves:
+            valid_move[1] = self.minimax(gs, 5, float("-inf"), float("inf"), gs.whiteToMove)
+        
+        valid_moves.sort(key=lambda x: x[1], reverse=gs.whiteToMove)
+        self.update_move(valid_moves[0][0], valid_moves[0][1], 3)
+         
+    
 
 
     def simpleHeuristic(self, gs):
@@ -50,7 +58,7 @@ class Agent:
         """
 
         pieces = ["N", "B", "R", "Q", "K", "p"]
-        values_of_pieces = [4, 3, 5, 9, 0, 1] #King is 0 because it is not a piece that can be captured
+        values_of_pieces = [4, 3, 5, 30, 0, 1] #King is 0 because it is not a piece that can be captured
         my_pieces = []
         if (gs.whiteToMove): #set the color of the player
             color = "w"
@@ -62,7 +70,7 @@ class Agent:
                 my_pieces.append( color + pieces[i])
               
         if(gs.checkMate):
-            return  -float("inf")
+            return  -float("inf") if gs.whiteToMove else float("inf")
         elif(gs.staleMate):
             return 0
         else: 
@@ -75,6 +83,65 @@ class Agent:
                     else:
                         score -= values_of_pieces[pieces.index(piece[1])]
             return score
+        
 
-         
+    def minimax(self, gs, max_depth, alpha, beta, isMaximizingPlayer):
+        """
+        Parameters
+        ----------
+        gs : Gamestate
+            current state of the game
+        depth : int
+            depth of the tree
+       
+        isMaximizingPlayer : bool
+            true if it is the maximizing player's turn
+        Returns
+        -------
+        best move for the current state
+        its depth 
+        and its score
 
+        """
+        if (max_depth == 0 or gs.checkMate or gs.staleMate):
+            return self.simpleHeuristic(gs)
+        valid_moves = gs.getValidMoves()
+        random.shuffle(valid_moves)
+        if (isMaximizingPlayer):
+            maxEval = float("-inf")
+            for move in valid_moves:
+                gs.makeMove(move)
+                eval = self.minimax(gs, max_depth - 1, alpha, beta, False)
+                gs.undoMove()
+                maxEval = max(maxEval, eval)
+                alpha = max(alpha, eval)
+                if beta <= alpha:
+                    break
+            return maxEval
+
+        else:
+            minEval = float("inf")
+            for move in valid_moves:
+                gs.makeMove(move)
+                eval = self.minimax(gs, max_depth - 1, alpha, beta, True)
+                gs.undoMove()
+                minEval = min(minEval, eval)
+                beta = min(beta, eval)
+                if beta <= alpha:
+                    break
+            return minEval
+
+       
+
+
+
+
+    def initialize_move_list(self,gs, isMaximizingPlayer):
+            valid_moves = gs.getValidMoves()
+            move_eval = []
+            for valid_move in valid_moves:
+                move_eval.append([valid_move,float("-inf") if isMaximizingPlayer else float("inf")])
+            return move_eval
+        
+        
+        
