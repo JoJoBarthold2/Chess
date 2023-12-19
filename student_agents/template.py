@@ -31,7 +31,50 @@ class Agent:
             current state of the game
         Returns
         -------
-        none
+       
+        
 
         """
         # TODO
+
+
+    def simpleHeuristic(self, gs):
+        """
+        Parameters
+        ----------
+        gs : Gamestate
+            current state of the game
+        Returns 
+        
+        heuristic value of the current state 
+        """
+
+        pieces = ["N", "B", "R", "Q", "K", "p"]
+        values_of_pieces = [4, 3, 5, 9, 0, 1] #King is 0 because it is not a piece that can be captured
+        my_pieces = []
+        if (gs.whiteToMove): #set the color of the player
+            color = "w"
+        else:
+            color = "b"	
+
+        
+        for i in range( 0,len(pieces) ):    #modify the pieces to match the color of the player
+                my_pieces.append( color + pieces[i])
+              
+        if(gs.checkMate):
+            return  -float("inf")
+        elif(gs.staleMate):
+            return 0
+        else: 
+            score = 0
+            for i in range(36):
+                piece = gs.board[i]
+                if(piece != "--"):
+                    if(piece in my_pieces):
+                        score += values_of_pieces[pieces.index(piece[1])]
+                    else:
+                        score -= values_of_pieces[pieces.index(piece[1])]
+            return score
+
+         
+
