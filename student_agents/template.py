@@ -35,7 +35,7 @@ class Agent:
         
 
         """
-        depth = 5
+        depth = 3
         valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
         random.shuffle(valid_moves)
         for valid_move in valid_moves:
@@ -63,12 +63,7 @@ class Agent:
         
        
         	
-        if gs.whiteToMove:
-            whitefactor = 1.2
-            blackfactor = 1
-        else:   
-            whitefactor = 1
-            blackfactor = 1.2
+      
         
 
               
@@ -82,9 +77,9 @@ class Agent:
                 piece = gs.board[i]
                 if(piece != "--"):
                     if(piece[0]=="w"):
-                        score +=   whitefactor * values_of_pieces[pieces.index(piece[1])]
+                        score +=  values_of_pieces[pieces.index(piece[1])]
                     else:
-                        score -=  blackfactor * values_of_pieces[pieces.index(piece[1])]
+                        score -=   values_of_pieces[pieces.index(piece[1])]
             return score
         
 
