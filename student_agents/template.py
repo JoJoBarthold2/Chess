@@ -39,7 +39,7 @@ class Agent:
         valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
         random.shuffle(valid_moves)
         for valid_move in valid_moves:
-            valid_move[1] = self.minimax(gs, depth, float("-inf"), float("inf"), gs.whiteToMove) #white is maximizing player
+            valid_move[1] = self.minimax(gs, depth, float("-inf"), float("inf")) #white is maximizing player
         
         valid_moves.sort(key=lambda x: x[1], reverse=gs.whiteToMove)
         self.update_move(valid_moves[0][0], valid_moves[0][1], depth)
@@ -88,7 +88,7 @@ class Agent:
             return score
         
 
-    def minimax(self, gs, max_depth, alpha, beta, isMaximizingPlayer):
+    def minimax(self, gs, max_depth, alpha, beta):
         """
         Parameters
         ----------
@@ -101,20 +101,19 @@ class Agent:
             true if it is the maximizing player's turn
         Returns
         -------
-        best move for the current state
-        its depth 
-        and its score
+       int
+              heuristic value of the current state
 
         """
         if (max_depth == 0 or gs.checkMate or gs.staleMate):
             return self.simpleHeuristic(gs)
         valid_moves = gs.getValidMoves()
         random.shuffle(valid_moves)
-        if (isMaximizingPlayer):
+        if (gs.whiteToMove):
             maxEval = float("-inf")
             for move in valid_moves:
                 gs.makeMove(move)
-                eval = self.minimax(gs, max_depth - 1, alpha, beta, False)
+                eval = self.minimax(gs, max_depth - 1, alpha, beta)
                 gs.undoMove()
                 maxEval = max(maxEval, eval)
                 alpha = max(alpha, eval)
@@ -126,7 +125,7 @@ class Agent:
             minEval = float("inf")
             for move in valid_moves:
                 gs.makeMove(move)
-                eval = self.minimax(gs, max_depth - 1, alpha, beta, True)
+                eval = self.minimax(gs, max_depth - 1, alpha, beta)
                 gs.undoMove()
                 minEval = min(minEval, eval)
                 beta = min(beta, eval)
