@@ -141,4 +141,19 @@ class Agent:
             return move_eval
         
         
-        
+    def count_pieces(self, gs):
+        """
+        Parameters
+        ----------
+        gs : Gamestate
+            current state of the game
+        Returns
+        -------
+        int
+            number of pieces on the board
+        """
+        count = 0
+        for i in range(36):
+            if gs.board[i] != "--":
+                count += 1
+        return count
