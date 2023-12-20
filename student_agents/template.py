@@ -39,7 +39,7 @@ class Agent:
         valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
         random.shuffle(valid_moves)
         for valid_move in valid_moves:
-            valid_move[1] = self.minimax(gs, depth, float("-inf"), float("inf"), gs.whiteToMove)
+            valid_move[1] = self.minimax(gs, depth, float("-inf"), float("inf"), gs.whiteToMove) #white is maximizing player
         
         valid_moves.sort(key=lambda x: x[1], reverse=gs.whiteToMove)
         self.update_move(valid_moves[0][0], valid_moves[0][1], depth)
@@ -63,7 +63,12 @@ class Agent:
         
        
         	
-
+        if gs.whiteToMove:
+            whitefactor = 1.2
+            blackfactor = 1
+        else:   
+            whitefactor = 1
+            blackfactor = 1.2
         
 
               
@@ -77,9 +82,9 @@ class Agent:
                 piece = gs.board[i]
                 if(piece != "--"):
                     if(piece[0]=="w"):
-                        score += values_of_pieces[pieces.index(piece[1])]
+                        score +=   whitefactor * values_of_pieces[pieces.index(piece[1])]
                     else:
-                        score -= values_of_pieces[pieces.index(piece[1])]
+                        score -=  blackfactor * values_of_pieces[pieces.index(piece[1])]
             return score
         
 
