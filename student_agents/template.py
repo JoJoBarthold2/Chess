@@ -35,7 +35,10 @@ class Agent:
         
 
         """
-        depth = 3
+        if(self.count_pieces(gs) <= 5):
+            depth = 4
+        else: 
+            depth = 3
         valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
         random.shuffle(valid_moves)
         for valid_move in valid_moves:
@@ -59,7 +62,7 @@ class Agent:
         """
 
         pieces = ["N", "B", "R", "Q", "K", "p"]
-        values_of_pieces = [4, 3, 5, 10, 0, 1] #King is 0 because it is not a piece that can be captured
+        values_of_pieces = [3, 3, 5, 10, 0, 1] #King is 0 because it is not a piece that can be captured
         
        
         	
