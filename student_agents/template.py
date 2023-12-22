@@ -64,7 +64,18 @@ class Agent:
         pieces = ["N", "B", "R", "Q", "K", "p"]
         values_of_pieces = [3, 3, 5, 10, 0, 1] #King is 0 because it is not a piece that can be captured
         
+        pawn_endgame_value_white = [2, 2, 2, 2, 2, 2, #first row is irrelevant but i just did this for being save
+                      1.5, 1.5, 1.5, 1.5, 1.5, 1.5,
+                      1, 1, 1, 1, 1, 1,
+                      0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+                      0.2, 0.2, 0.2, 0.2, 0.2, 0.2,
+                      0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        
+        pawn_endgame_value_black = pawn_endgame_value_white[::-1]
+
+
        
+
         	
       
         
@@ -80,9 +91,16 @@ class Agent:
                 piece = gs.board[i]
                 if(piece != "--"):
                     if(piece[0]=="w"):
-                        score +=  values_of_pieces[pieces.index(piece[1])]
+                        if(piece[1]=="p" and self.count_pieces(gs) <= 8):
+                            score += pawn_endgame_value_white[i]
+                        else:
+                            score +=  values_of_pieces[pieces.index(piece[1])]
+                       
                     else:
-                        score -=   values_of_pieces[pieces.index(piece[1])]
+                        if(piece[1]=="p" and self.count_pieces(gs) <= 8):
+                            score -= pawn_endgame_value_black[i]
+                        else:
+                            score -=   values_of_pieces[pieces.index(piece[1])]
             return score
         
 
