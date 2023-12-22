@@ -36,7 +36,11 @@ class Agent:
 
         """
         if(self.count_pieces(gs) <= 5):
+            depth = 5
+        elif(self.count_pieces(gs) <= 8):
             depth = 4
+        elif(self.count_pieces(gs) <= 3):
+            depth = 7
         else: 
             depth = 3
         valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
