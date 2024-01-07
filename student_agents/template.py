@@ -1,4 +1,8 @@
 import random
+import sys
+# caution: path[0] is reserved for script path (or '' in REPL)
+sys.path.insert(1, 'C:/Users/morit/OneDrive/Desktop/Chess')
+import ChessEngine
 
 
 class Agent:
@@ -34,4 +38,56 @@ class Agent:
         none
 
         """
-        # TODO
+        valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
+        move_eval = []
+        
+        for move in valid_moves:
+            if gs.whiteToMove:
+                move_eval.append([move, float('-inf')])
+            else:
+                move_eval.append([move, float('inf')])
+    
+        for move in move_eval:
+            move[1]
+    def initialize_move_list(self, gs, white_to_move):
+        """
+        Parameters
+        ----------
+        gs : Gamestate
+            current state of the game
+        white_to_move : bool
+            True if white is to move, False if black is to move
+        Returns
+        -------
+        valid_moves : list
+            list of valid moves
+
+        """
+        valid_moves = gs.getValidMoves()
+        if white_to_move:
+            for i in range(len(valid_moves)-1, -1, -1):
+                if valid_moves[i].pieceMoved[0] != 'w':
+                    valid_moves.remove(valid_moves[i])
+        else:
+            for i in range(len(valid_moves)-1, -1, -1):
+                if valid_moves[i].pieceMoved[0] != 'b':
+                    valid_moves.remove(valid_moves[i])
+        return valid_moves
+
+if __name__ == '__main__':
+    gs = ChessEngine.GameState()
+    gs.board = ['--', 'bp', '--', '--', '--', '--',
+                '--', '--', '--', '--', '--', '--',
+                '--', '--', '--', '--', '--', '--',
+                '--', '--', '--', '--', '--', '--',
+                '--', '--', '--', '--', '--', '--',
+                '--', '--', '--', '--', '--', '--']
+    gs.whiteToMove = False
+
+    agent = Agent()
+    valid_moves = agent.initialize_move_list(gs, False)
+
+    expected_moves = gs.getValidMoves()
+    for move in expected_moves:
+        print(move.pieceMoved[0])
+    
