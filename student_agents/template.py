@@ -47,8 +47,10 @@ class Agent:
             else:
                 move_eval.append([move, float('inf')])
     
-        for move in move_eval:
-            move[1]
+        for i in range(len(move_eval)):
+            move_eval[i][1] = self.negamax(move_eval[i][0], 2, gs.whiteToMove, gs)
+        move_eval.sort(key=lambda x: x[1], reverse=gs.whiteToMove)
+
     def initialize_move_list(self, gs, white_to_move):
         """
         Parameters
@@ -90,4 +92,5 @@ if __name__ == '__main__':
     expected_moves = gs.getValidMoves()
     for move in expected_moves:
         print(move.pieceMoved[0])
+    
     
