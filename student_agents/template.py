@@ -1,4 +1,7 @@
 import random
+import sys
+sys.path.append('C:/Users/morit/OneDrive/Desktop/Chess')
+import ChessEngine
 
 
 class Agent:
@@ -31,25 +34,28 @@ class Agent:
             current state of the game
         Returns
         -------
-       
+        """
+        if self.count_pieces(gs) <= 5:
+            depth = 8
+        elif self.count_pieces(gs) <= 8:
+            depth = 6
+        elif self.count_pieces(gs) <= 3:
+            depth = 10
+        else: 
+            depth = 4
+        valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
         
 
-        """
-        if(self.count_pieces(gs) <= 5):
-            depth = 5
-        elif(self.count_pieces(gs) <= 8):
-            depth = 4
-        elif(self.count_pieces(gs) <= 3):
-            depth = 7
-        else: 
-            depth = 3
-        valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
-        random.shuffle(valid_moves)
-        for valid_move in valid_moves:
-            valid_move[1] = self.minimax(gs, depth, float("-inf"), float("inf")) #white is maximizing player
+        for i in range(len(valid_moves)):
+            valid_moves[i][1] = self.minimax(gs, depth, float("-inf"), float("inf")) #white is maximizing player
+        if gs.whiteToMove:
+            best_move = max(valid_moves, key=lambda x: x[1])
+        else:  
+            best_move = min(valid_moves, key=lambda x: x[1])
         
-        valid_moves.sort(key=lambda x: x[1], reverse=gs.whiteToMove)
-        self.update_move(valid_moves[0][0], valid_moves[0][1], depth)
+        
+        
+        self.update_move(best_move[0], best_move[1], depth)
          
     
 
@@ -182,3 +188,22 @@ class Agent:
             if gs.board[i] != "--":
                 count += 1
         return count
+
+# if __name__ == '__main__':
+#     gs = ChessEngine.GameState()
+#     gs.board = ['--', '--', '--', '--', '--', '--',
+#                 '--', 'bp', '--', '--', '--', '--',
+#                 '--', '--', 'wp', '--', '--', '--',
+#                 '--', '--', '--', '--', '--', '--',
+#                 '--', '--', '--', '--', '--', '--',
+#                 '--', '--', '--', '--', '--', '--']
+#     gs.whiteToMove = True
+
+#     agent = Agent()
+#     valid_moves = gs.getValidMoves()
+    
+#    #print(move.pieceMoved() for move in agent.initialize_move_list(gs, gs.whiteToMove))
+#     agent.findBestMove(gs)
+    
+#     print(agent.get_move())
+        
