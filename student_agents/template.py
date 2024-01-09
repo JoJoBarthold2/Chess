@@ -1,7 +1,7 @@
 import random
-import sys
-# caution: path[0] is reserved for script path (or '' in REPL)
-sys.path.insert(1, 'C:/Users/morit/OneDrive/Desktop/Chess')
+# import sys
+# # caution: path[0] is reserved for script path (or '' in REPL)
+# sys.path.insert(1, 'C:/Users/morit/OneDrive/Desktop/Chess')
 import ChessEngine
 
 
@@ -128,8 +128,8 @@ class Agent:
                     value -= pieceScore[piece[1]]+  piecePosScore * .2
         return value
 
-if __name__ == '__main__':
-   piecePosScores = {"K": 0, "Q": 9, "R": 5, "B": 2, "N": 2, "p": 1}
-   print(piecePosScores["--"][0])
+#if __name__ == '__main__':
+#    piecePosScores = {"K": 0, "Q": 9, "R": 5, "B": 2, "N": 2, "p": 1}
+#    print(piecePosScores["--"][0])
     
     
