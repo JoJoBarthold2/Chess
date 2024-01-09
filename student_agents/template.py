@@ -57,6 +57,7 @@ class Agent:
                 if depth == self.maxDepth:
                     self.nextMove = move
             gs.undoMove()
+            gs.checkmate, gs.stalemate = False, False
             if maxScore > alpha: #prune
                 alpha = maxScore
             if alpha >= beta:
