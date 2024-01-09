@@ -8,7 +8,7 @@ import ChessEngine
 class Agent:
     def __init__(self):
         self.move_queue = None
-        self.maxDepth = 3
+        self.maxDepth = 5
         nextMove = None
     def get_move(self):
         move = None
@@ -40,29 +40,32 @@ class Agent:
 
         """
         self.nextMove = None
-        self.negamax(gs, gs.getValidMoves(), self.maxDepth, 1 if gs.whiteToMove else -1)
+        self.negamax(gs, gs.getValidMoves(), self.maxDepth, 1 if gs.whiteToMove else -1, -float("inf"), float("inf"))
         self.update_move(self.nextMove, 0, 0)
     
-    def negamax(self,gs, validMoves, depth, turnMultiplier):
+    def negamax(self,gs, validMoves, depth, turn, alpha, beta):
          
         if depth == 0:
-            return turnMultiplier * self.heuristic(gs)
+            return turn * self.heuristic(gs)
         maxScore = -float("inf")
         for move in validMoves:
             gs.makeMove(move)
             nextMoves = gs.getValidMoves()
-            score = -self.negamax(gs, nextMoves, depth -1, -turnMultiplier)
+            score = -self.negamax(gs, nextMoves, depth -1, -turn, -beta, -alpha)
             if score > maxScore:
                 maxScore = score
                 if depth == self.maxDepth:
                     self.nextMove = move
             gs.undoMove()
+            if maxScore > alpha: #prune
+                alpha = maxScore
+            if alpha >= beta:
+                break
         return maxScore
 
     def heuristic(self, state, max_or_min = True):
         value =0
-        piece_names = ["p","N","B","R","Q","K"]
-        piece_values = [1,3,3,5,9,0]
+        pieceScore = {"K": 0, "Q": 9, "R": 5, "B": 3, "N": 3, "p": 1}
 
         if state.checkMate:
         
@@ -77,9 +80,9 @@ class Agent:
         for piece in state.board:
             if piece != "--":
                 if piece[0] == "w":
-                    value += piece_values[piece_names.index(piece[1])]
+                    value += pieceScore[piece[1]]
                 else:
-                    value -= piece_values[piece_names.index(piece[1])]
+                    value -= pieceScore[piece[1]]
         return value
 
 if __name__ == '__main__':
