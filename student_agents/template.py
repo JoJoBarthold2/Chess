@@ -8,7 +8,8 @@ import ChessEngine
 class Agent:
     def __init__(self):
         self.move_queue = None
-
+        self.maxDepth = 3
+        nextMove = None
     def get_move(self):
         move = None
         while not self.move_queue.empty():
@@ -38,43 +39,48 @@ class Agent:
         none
 
         """
-        valid_moves = self.initialize_move_list(gs, gs.whiteToMove)
-        move_eval = []
-        
-        for move in valid_moves:
-            if gs.whiteToMove:
-                move_eval.append([move, float('-inf')])
-            else:
-                move_eval.append([move, float('inf')])
+        self.nextMove = None
+        self.negamax(gs, gs.getValidMoves(), self.maxDepth, 1 if gs.whiteToMove else -1)
+        self.update_move(self.nextMove, 0, 0)
     
-        for i in range(len(move_eval)):
-            move_eval[i][1] = self.negamax(move_eval[i][0], 2, gs.whiteToMove, gs)
-        move_eval.sort(key=lambda x: x[1], reverse=gs.whiteToMove)
+    def negamax(self,gs, validMoves, depth, turnMultiplier):
+         
+        if depth == 0:
+            return turnMultiplier * self.heuristic(gs)
+        maxScore = -float("inf")
+        for move in validMoves:
+            gs.makeMove(move)
+            nextMoves = gs.getValidMoves()
+            score = -self.negamax(gs, nextMoves, depth -1, -turnMultiplier)
+            if score > maxScore:
+                maxScore = score
+                if depth == self.maxDepth:
+                    self.nextMove = move
+            gs.undoMove()
+        return maxScore
 
-    def initialize_move_list(self, gs, white_to_move):
-        """
-        Parameters
-        ----------
-        gs : Gamestate
-            current state of the game
-        white_to_move : bool
-            True if white is to move, False if black is to move
-        Returns
-        -------
-        valid_moves : list
-            list of valid moves
+    def heuristic(self, state, max_or_min = True):
+        value =0
+        piece_names = ["p","N","B","R","Q","K"]
+        piece_values = [1,3,3,5,9,0]
 
-        """
-        valid_moves = gs.getValidMoves()
-        if white_to_move:
-            for i in range(len(valid_moves)-1, -1, -1):
-                if valid_moves[i].pieceMoved[0] != 'w':
-                    valid_moves.remove(valid_moves[i])
-        else:
-            for i in range(len(valid_moves)-1, -1, -1):
-                if valid_moves[i].pieceMoved[0] != 'b':
-                    valid_moves.remove(valid_moves[i])
-        return valid_moves
+        if state.checkMate:
+        
+            if max_or_min:
+                value = - float("inf")
+            else:
+                value = float("inf")
+            return value
+        elif state.staleMate:
+            return value 
+    
+        for piece in state.board:
+            if piece != "--":
+                if piece[0] == "w":
+                    value += piece_values[piece_names.index(piece[1])]
+                else:
+                    value -= piece_values[piece_names.index(piece[1])]
+        return value
 
 if __name__ == '__main__':
     gs = ChessEngine.GameState()
