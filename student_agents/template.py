@@ -67,6 +67,44 @@ class Agent:
     def heuristic(self, state, max_or_min = True):
         value =0
         pieceScore = {"K": 0, "Q": 9, "R": 5, "B": 3, "N": 3, "p": 1}
+        nightScore = [1, 1, 1, 1, 1, 1,
+                      1, 2, 2, 2, 2, 1,
+                      1, 2, 3, 3, 2, 1,
+                      1, 2, 3, 3, 2, 1,
+                      1, 2, 2, 2, 2, 1,
+                      1, 1, 1, 1, 1, 1]
+        bishopScore = [4, 3, 2, 1, 1, 2,
+                          3, 4, 3, 2, 2, 3,
+                          2, 3, 4, 3, 3, 2,
+                          1, 2, 3, 4, 2, 1,
+                          1, 2, 3, 2, 4, 1,
+                          2, 1, 2, 1, 1, 4]
+        queenScore = [1, 1, 1, 1, 1, 1,
+                        1, 2, 2, 2, 2, 1,
+                        1, 2, 3, 3, 2, 1,
+                        1, 2, 3, 3, 2, 1,
+                        1, 2, 2, 2, 2, 1,
+                        1, 1, 1, 1, 1, 1]
+        rookScore = [1, 1, 1, 1, 1, 1,
+                        1, 2, 2, 2, 2, 1,
+                        1, 2, 3, 3, 2, 1,
+                        1, 2, 3, 3, 2, 1,
+                        1, 2, 2, 2, 2, 1,
+                        1, 1, 1, 1, 1, 1]
+        pawnScore = [1, 1, 1, 1, 1, 1,
+                        1, 2, 2, 2, 2, 1,
+                        1, 2, 3, 3, 2, 1,
+                        1, 2, 3, 3, 2, 1,
+                        1, 2, 2, 2, 2, 1,
+                        1, 1, 1, 1, 1, 1]
+        
+        dummyScore = [0, 0, 0, 0, 0, 0,
+                        0,0,0,0,0,0,
+                        0,0,0,0,0,0,
+                        0,0,0,0,0,0,
+                        0,0,0,0,0,0,
+                        0,0,0,0,0,0]
+        piecePosScores = {"K": dummyScore, "Q": queenScore, "R": rookScore, "B": bishopScore, "N": nightScore, "p": pawnScore}
 
         if state.checkMate:
         
@@ -78,29 +116,20 @@ class Agent:
         elif state.staleMate:
             return value 
     
-        for piece in state.board:
+        for i in range(len(state.board)):   
+            piece = state.board[i]
+            piecePosScore = 0
             if piece != "--":
+                
+                piecePosScore = piecePosScores[piece[1]][i]
                 if piece[0] == "w":
-                    value += pieceScore[piece[1]]
-                else:
-                    value -= pieceScore[piece[1]]
+                    value += pieceScore[piece[1]]+ piecePosScore * .2
+                elif piece[0] == "b":
+                    value -= pieceScore[piece[1]]+  piecePosScore * .2
         return value
 
 if __name__ == '__main__':
-    gs = ChessEngine.GameState()
-    gs.board = ['--', 'bp', '--', '--', '--', '--',
-                '--', '--', '--', '--', '--', '--',
-                '--', '--', '--', '--', '--', '--',
-                '--', '--', '--', '--', '--', '--',
-                '--', '--', '--', '--', '--', '--',
-                '--', '--', '--', '--', '--', '--']
-    gs.whiteToMove = False
-
-    agent = Agent()
-    valid_moves = agent.initialize_move_list(gs, False)
-
-    expected_moves = gs.getValidMoves()
-    for move in expected_moves:
-        print(move.pieceMoved[0])
+   piecePosScores = {"K": 0, "Q": 9, "R": 5, "B": 2, "N": 2, "p": 1}
+   print(piecePosScores["--"][0])
     
     
