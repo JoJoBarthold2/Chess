@@ -43,37 +43,40 @@ class Agent:
         none
 
         """
+        orderedMoves = self.initialize_move_list(gs.getValidMoves())
         while True: #iterative deepening
             self.maxDepth += 1
             
             self.nextMove = None
-            bestScore = self.negamax(gs, gs.getValidMoves(), self.maxDepth, 1 if gs.whiteToMove else -1, -float("inf"), float("inf"))
+            orderedMoves = self.negamaxFirst(gs, orderedMoves, self.maxDepth, 1 if gs.whiteToMove else -1, -float("inf"), float("inf"))
+            bestScore = orderedMoves[0][1]
             self.update_move(self.nextMove, bestScore, self.maxDepth)
 
 
 
+    def initialize_move_list(self,moves): 
+        move_eval = []
+        for move in moves:
+            move_eval.append([move,float("-inf")])
+        return move_eval
 
 
-
-    def initialize
-
-
-    def negamaxFirst(self,gs, validMoves, depth, turn, alpha, beta):
+    def negamaxFirst(self,gs, orderedMoves, depth, turn, alpha, beta):
         """returns sorted list of moves based on the heuristic,which can be used to order moves for next deepening iteration"""
-        orderedMoves = []
+        
         if depth == 0 or gs.checkMate or gs.staleMate or gs.draw or gs.staleMate:
             return turn * self.heuristic(gs)
         maxScore = -float("inf")
-        for move in validMoves:
-            gs.makeMove(move)
+        for i in range(len(orderedMoves)):
+            gs.makeMove(orderedMoves[i][0])
             gs.getValidMoves()
             nextMoves = gs.getValidMoves()
             score = -self.negamax(gs, nextMoves, depth -1, -turn, -beta, -alpha)
-            orderedMoves.append([move, score])
+            orderedMoves[i][1] = score
             if score > maxScore:
                 maxScore = score
                 if depth == self.maxDepth:
-                    self.nextMove = move
+                    self.nextMove = orderedMoves[i][0]
             gs.undoMove()
             
             if maxScore > alpha: #prune
