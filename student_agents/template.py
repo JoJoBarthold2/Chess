@@ -1,8 +1,5 @@
 import random
-# import sys
-# # caution: path[0] is reserved for script path (or '' in REPL)
-# sys.path.insert(1, 'C:/Users/morit/OneDrive/Desktop/Chess')
-#import ChessEngine
+
 
 
 class Agent:
@@ -245,9 +242,7 @@ class Agent:
                 piece = self.indexOf(gs.board[i])
                 h ^= ZobristTable[i][piece]
         return h
-#if __name__ == '__main__':
-#    piecePosScores = {"K": 0, "Q": 9, "R": 5, "B": 2, "N": 2, "p": 1}
-#    print(piecePosScores["--"][0])
+
 
 #----------------------- explanation----------------------  
 # We used negamax as a basic framework. One of the reasons for this was that we had problems implementing classing min-max search , as stated in the forum. Also it is shorter to write
