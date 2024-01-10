@@ -137,12 +137,6 @@ class Agent:
                         1, 2, 3, 3, 2, 1,
                         1, 2, 2, 2, 2, 1,
                         1, 1, 6, 1, 1, 1]
-        rookScore = [1, 1, 1, 1, 1, 1,
-                        1, 2, 2, 2, 2, 1,
-                        1, 2, 3, 3, 2, 1,
-                        1, 2, 3, 3, 2, 1,
-                        1, 2, 2, 2, 2, 1,
-                        1, 1, 1, 1, 1, 1]
         whitePawnScore = [10, 10, 10, 10, 10, 10,
                         9, 9, 9, 9, 9, 9,
                         8, 8, 8, 8, 8, 8,
@@ -161,7 +155,7 @@ class Agent:
                         0,0,0,0,0,0,
                         0,0,0,0,0,0,
                         0,0,0,0,0,0]
-        piecePosScores = {"K": dummyScore, "Q": dummyScore, "R": rookScore, "B": bishopScore, "N": nightScore, "wp": whitePawnScore, "bp": blackPawnScore}
+        piecePosScores = {"K": dummyScore, "Q": dummyScore, "B": bishopScore, "N": nightScore, "wp": whitePawnScore, "bp": blackPawnScore}
 
         if state.checkMate:
         
