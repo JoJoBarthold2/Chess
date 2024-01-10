@@ -40,12 +40,13 @@ class Agent:
 
         """
         self.nextMove = None
+        
         self.negamax(gs, gs.getValidMoves(), self.maxDepth, 1 if gs.whiteToMove else -1, -float("inf"), float("inf"))
         self.update_move(self.nextMove, 0, 0)
     
     def negamax(self,gs, validMoves, depth, turn, alpha, beta):
          
-        if depth == 0:
+        if depth == 0 or gs.checkMate or gs.staleMate:
             return turn * self.heuristic(gs)
         maxScore = -float("inf")
         for move in validMoves:
@@ -64,7 +65,7 @@ class Agent:
                 break
         return maxScore
 
-    def heuristic(self, state, max_or_min = True):
+    def heuristic(self, state):
         value =0
         pieceScore = {"K": 0, "Q": 9, "R": 5, "B": 3, "N": 3, "p": 1}
         nightScore = [1, 1, 1, 1, 1, 1,
@@ -79,39 +80,44 @@ class Agent:
                           1, 2, 4, 4, 2, 1,
                           1, 4, 3, 2, 4, 1,
                           4, 1, 2, 1, 1, 4]
-        queenScore = [1, 1, 3, 1, 1, 1,
+        queenScore = [1, 1, 8, 1, 1, 1,
                         1, 2, 2, 2, 2, 1,
                         1, 2, 3, 3, 2, 1,
                         1, 2, 3, 3, 2, 1,
                         1, 2, 2, 2, 2, 1,
-                        1, 1, 3, 1, 1, 1]
+                        1, 1, 8, 1, 1, 1]
         rookScore = [1, 1, 1, 1, 1, 1,
                         1, 2, 2, 2, 2, 1,
                         1, 2, 3, 3, 2, 1,
                         1, 2, 3, 3, 2, 1,
                         1, 2, 2, 2, 2, 1,
                         1, 1, 1, 1, 1, 1]
-        pawnScore = [1, 1, 1, 1, 1, 1,
-                        1, 2, 2, 2, 2, 1,
-                        1, 2, 3, 3, 2, 1,
-                        1, 2, 3, 3, 2, 1,
-                        1, 2, 2, 2, 2, 1,
-                        1, 1, 1, 1, 1, 1]
-        
+        whitePawnScore = [10, 10, 10, 10, 10, 10,
+                        9, 9, 9, 9, 9, 9,
+                        8, 8, 8, 8, 8, 8,
+                        1, 2, 4, 4, 1, 1,
+                        2, 4, 1, 1, 4, 2,
+                        0, 0, 0, 0, 0, 0]
+        blackPawnScore = [0, 0, 0, 0, 0, 0,
+                        2, 4, 1, 1, 1, 2,
+                        1, 2, 1, 1, 4, 1,
+                        1, 2, 4, 4, 2, 1,
+                        9, 9, 9, 9, 9, 9,
+                        10, 10, 10, 10, 10, 10]
         dummyScore = [0, 0, 0, 0, 0, 0,
                         0,0,0,0,0,0,
                         0,0,0,0,0,0,
                         0,0,0,0,0,0,
                         0,0,0,0,0,0,
                         0,0,0,0,0,0]
-        piecePosScores = {"K": dummyScore, "Q": queenScore, "R": rookScore, "B": bishopScore, "N": nightScore, "p": pawnScore}
+        piecePosScores = {"K": dummyScore, "Q": dummyScore, "R": rookScore, "B": bishopScore, "N": nightScore, "wp": whitePawnScore, "bp": blackPawnScore}
 
         if state.checkMate:
         
-            if max_or_min:
+            if state.whiteToMove:
                 value = - float("inf")
             else:
-                value = float("inf")
+                value =  float("inf")
             return value
         elif state.staleMate:
             return value 
@@ -120,12 +126,14 @@ class Agent:
             piece = state.board[i]
             piecePosScore = 0
             if piece != "--":
-                
-                piecePosScore = piecePosScores[piece[1]][i]
+                if piece[1] == "p":
+                    piecePosScore = piecePosScores[piece][i]
+                else:
+                    piecePosScore = piecePosScores[piece[1]][i]
                 if piece[0] == "w":
-                    value += pieceScore[piece[1]]+ piecePosScore * .2
+                    value += pieceScore[piece[1]]+ piecePosScore * .1
                 elif piece[0] == "b":
-                    value -= pieceScore[piece[1]]+  piecePosScore * .2
+                    value -= pieceScore[piece[1]]+  piecePosScore * .1
         return value
 
 #if __name__ == '__main__':
