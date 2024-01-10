@@ -13,6 +13,7 @@ class Agent:
         nextMove = None
         self.ZobristTable = self.initTable()
         self.lookupTable = {}
+        
     def get_move(self):
         move = None
         while not self.move_queue.empty():
@@ -44,10 +45,48 @@ class Agent:
         """
         while True: #iterative deepening
             self.maxDepth += 1
+            
             self.nextMove = None
             bestScore = self.negamax(gs, gs.getValidMoves(), self.maxDepth, 1 if gs.whiteToMove else -1, -float("inf"), float("inf"))
             self.update_move(self.nextMove, bestScore, self.maxDepth)
+
+
+
+
+
+
+    def initialize
+
+
+    def negamaxFirst(self,gs, validMoves, depth, turn, alpha, beta):
+        """returns sorted list of moves based on the heuristic,which can be used to order moves for next deepening iteration"""
+        orderedMoves = []
+        if depth == 0 or gs.checkMate or gs.staleMate or gs.draw or gs.staleMate:
+            return turn * self.heuristic(gs)
+        maxScore = -float("inf")
+        for move in validMoves:
+            gs.makeMove(move)
+            gs.getValidMoves()
+            nextMoves = gs.getValidMoves()
+            score = -self.negamax(gs, nextMoves, depth -1, -turn, -beta, -alpha)
+            orderedMoves.append([move, score])
+            if score > maxScore:
+                maxScore = score
+                if depth == self.maxDepth:
+                    self.nextMove = move
+            gs.undoMove()
+            
+            if maxScore > alpha: #prune
+                alpha = maxScore
+            if alpha >= beta:
+                break
+        orderedMoves.sort(key = lambda x: x[1], reverse = True)
+        return orderedMoves
     
+
+
+
+
     def negamax(self,gs, validMoves, depth, turn, alpha, beta):
          
         if depth == 0 or gs.checkMate or gs.staleMate or gs.draw or gs.staleMate:
