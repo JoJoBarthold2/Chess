@@ -249,5 +249,5 @@ class Agent:
 # We use a relatively simple heuristic, we simply add up values of the pieces and then also add weighting values with certain look up tables for each piece
 # We used iterative deepening to use the available time optimally. To reduce the effort for computing the evaluation we added hashing. We used Zobrist hashing since it is popular
 # for chess engines and also quite effective. 
-#  Another important aspect of iterative deepening is that we try use the previos iteration to guess a good move oder so we can prune a lot of moves. This is done by remebering
+#  Another important aspect of iterative deepening is that we try use the previos iteration to guess a good move oder so we can prune a lot of moves. This is done by remembering
 # the scores of this iteration and keeping them in a list in decending order. This approach is somewhat naive but it had good results for us. 
