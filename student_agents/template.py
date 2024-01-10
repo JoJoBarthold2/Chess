@@ -10,7 +10,6 @@ class Agent:
         self.move_queue = None
         self.maxDepth = 0
         self.value = 0
-        nextMove = None
         self.ZobristTable = self.initTable()
         self.lookupTable = {}
         
@@ -55,6 +54,7 @@ class Agent:
 
 
     def initialize_move_list(self,moves): 
+        """helper function that creates a list of moves we can later sort"""
         move_eval = []
         for move in moves:
             move_eval.append([move,float("-inf")])
@@ -91,7 +91,7 @@ class Agent:
 
 
     def negamax(self,gs, validMoves, depth, turn, alpha, beta):
-         
+        """simpler version of negamax for the subsequent iterations of negamax""" 
         if depth == 0 or gs.checkMate or gs.staleMate or gs.draw or gs.staleMate:
             return turn * self.heuristic(gs)
         maxScore = -float("inf")
@@ -114,6 +114,7 @@ class Agent:
         return maxScore
 
     def heuristic(self, state):
+        """function that evaluates a gamestate based on the pieces and their position"""
         h = self.computeHash(state, self.ZobristTable)
         if h in self.lookupTable:
             return self.lookupTable[h]
@@ -253,5 +254,11 @@ class Agent:
 #if __name__ == '__main__':
 #    piecePosScores = {"K": 0, "Q": 9, "R": 5, "B": 2, "N": 2, "p": 1}
 #    print(piecePosScores["--"][0])
-    
-    
+
+#----------------------- Explanaiton----------------------  
+# We used negamax as a basic framework. One of the reasons for this was that we had problems implementing classing min-max search , as stated in the forum. Also it is shorter to write
+# We use a relatively simple heuristic, we simply add up values of the pieces and then also add weighting values with certain look up tables for each piece
+# We used iterative deepening to use the available time optimally. To reduce the effort for computing the evaluation we added hashing. We used Zobrist hashing since it is popular
+# for chess engines and also quite effective. 
+#  Another important aspect of iterative deepening is that we try use the previos iteration to guess a good move oder so we can prune a lot of moves. This is done by remebering
+# the scores of this iteration and keeping them in a list in decending order. This approach is somewhat naive but it had good results for us. 
