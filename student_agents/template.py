@@ -249,7 +249,7 @@ class Agent:
 #    piecePosScores = {"K": 0, "Q": 9, "R": 5, "B": 2, "N": 2, "p": 1}
 #    print(piecePosScores["--"][0])
 
-#----------------------- Explanaiton----------------------  
+#----------------------- explanation----------------------  
 # We used negamax as a basic framework. One of the reasons for this was that we had problems implementing classing min-max search , as stated in the forum. Also it is shorter to write
 # We use a relatively simple heuristic, we simply add up values of the pieces and then also add weighting values with certain look up tables for each piece
 # We used iterative deepening to use the available time optimally. To reduce the effort for computing the evaluation we added hashing. We used Zobrist hashing since it is popular
